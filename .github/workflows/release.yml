@@ -23,6 +23,15 @@ jobs:
       - name: Build UI
         run: cd src/webview/ui && yarn install && yarn run build:all && cd ../../..
 
+      - name: Install jq
+        run: sudo apt-get update && sudo apt-get install jq -y
+
+      - name: Read Version from package.json
+        run: echo "::set-output name=PACKAGE_VERSION::$(jq -r '.version' package.json)"
+
+      - name: Display PACKAGE_VERSION
+        run: echo ${{ steps.extract_version.outputs.PACKAGE_VERSION }}
+
       - name: Package extension
         run: npm install -g @vscode/vsce && vsce package
 
@@ -38,6 +47,9 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
+
+      - name: Display PACKAGE_VERSION in release
+        run: echo ${{ needs.build.outputs.PACKAGE_VERSION }}
 
       - name: Download VSIX
         uses: actions/download-artifact@v2
