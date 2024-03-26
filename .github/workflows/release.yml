@@ -62,7 +62,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.SECRET_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: 'audio-recorder'
+          asset_path: 'audio-recorder/audio-recorder'
           # asset_name: audio-recorder-${{ github.run_number }}.vsix
           asset_name: audio-recorder
           asset_content_type: application/zip
