@@ -6,6 +6,8 @@ import {
   CloudUIToExtMsg,
   CloudWebToProviderMsgTypes,
 } from '../../types/cloud';
+import { storageKeys } from '../../types/storage';
+import { environment } from '../../environment';
 
 export class CloudSidebarWebViewProvider implements vscode.WebviewViewProvider {
   /**
@@ -50,6 +52,52 @@ export class CloudSidebarWebViewProvider implements vscode.WebviewViewProvider {
     /**
      * Handle recieve message from webview
      */
+    // webviewPanel.webview.onDidReceiveMessage(
+    //   async (e: {
+    //     type: CloudWebToProviderMsgTypes;
+    //     data: CloudUIToExtMsg;
+    //   }) => {
+    //     switch (e.type) {
+    //       case CloudWebToProviderMsgTypes.RequestToLogin: {
+    //         console.log('data  : ', e.data);
+
+    //         axios
+    //           .post('http://127.0.0.1:8001/api/v1/auth/login', e.data)
+    //           .then(function (response: any) {
+    //             const tokenData = response;
+    //             console.log('========>', tokenData.token);
+    //             console.log('========>', tokenData.token_expiration);
+    //             webviewPanel.webview.postMessage({
+    //               type: CloudProviderToWebMsgTypes.LoginResponse,
+    //               data: {
+    //                 status: 'success',
+    //                 data: null,
+    //               },
+    //             });
+    //             if (tokenData?.token) {
+    //               this => here getting errroe of this context
+    //             }
+    //           })
+    //           .catch(function (error) {
+    //             console.log('errr : ', error?.message);
+    //             webviewPanel.webview.postMessage({
+    //               type: CloudProviderToWebMsgTypes.LoginResponse,
+    //               data: {
+    //                 status: 'failed',
+    //                 data: null,
+    //               },
+    //             });
+    //           });
+
+    //         break;
+    //       }
+
+    //       default:
+    //         break;
+    //     }
+    //   },
+    // );
+
     webviewPanel.webview.onDidReceiveMessage(
       async (e: {
         type: CloudWebToProviderMsgTypes;
@@ -59,30 +107,37 @@ export class CloudSidebarWebViewProvider implements vscode.WebviewViewProvider {
           case CloudWebToProviderMsgTypes.RequestToLogin: {
             console.log('data  : ', e.data);
 
-            axios
-              .post('http://127.0.0.1:8001/api/v1/auth/login', e.data)
-              .then(function (response: any) {
-                const tokenData = response;
-                console.log('========>', tokenData.token);
-                console.log('========>', tokenData.token_expiration);
-                webviewPanel.webview.postMessage({
-                  type: CloudProviderToWebMsgTypes.LoginResponse,
-                  data: {
-                    status: 'success',
-                    data: null,
-                  },
-                });
-              })
-              .catch(function (error) {
-                console.log('errr : ', error?.message);
-                webviewPanel.webview.postMessage({
-                  type: CloudProviderToWebMsgTypes.LoginResponse,
-                  data: {
-                    status: 'failed',
-                    data: null,
-                  },
-                });
+            try {
+              const response = await axios.post(
+                `${environment.BASE_CLOUD_URL}/auth/login`,
+                e.data,
+              );
+              const tokenData = response.data;
+              webviewPanel.webview.postMessage({
+                type: CloudProviderToWebMsgTypes.LoginResponse,
+                data: {
+                  status: 'success',
+                  data: null,
+                },
               });
+
+              if (tokenData?.token) {
+                // store the token data
+                this.storeSecret(
+                  storageKeys.cloudUserToken,
+                  JSON.stringify(tokenData),
+                );
+              }
+            } catch (error) {
+              console.log('errr : ', error?.message);
+              webviewPanel.webview.postMessage({
+                type: CloudProviderToWebMsgTypes.LoginResponse,
+                data: {
+                  status: 'failed',
+                  data: null,
+                },
+              });
+            }
 
             break;
           }
@@ -160,5 +215,26 @@ export class CloudSidebarWebViewProvider implements vscode.WebviewViewProvider {
   // Method to retrieve data from the global state
   public getGlobalState(key: string): any {
     return this.globalState.get(key);
+  }
+
+  /**
+   * store secrets
+   */
+  private storeSecret(key: string, value: string) {
+    this.context.secrets.store(key, value);
+  }
+
+  /**
+   * get secrets
+   */
+  private getSecret(key: string, value: string) {
+    this.context.secrets.get(key);
+  }
+
+  /**
+   * delete secrets
+   */
+  private removeSecret(key: string, value: string) {
+    this.context.secrets.delete(key);
   }
 }

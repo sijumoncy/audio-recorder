@@ -57,7 +57,9 @@ function Login() {
         className=""
         value={accessKey}
         placeholder="access key"
-        onChange={(e) => setAccessKey(e.target.value)}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          setAccessKey(e.target.value)
+        }
       >
         Access Key
       </VSCodeTextField>
@@ -65,7 +67,9 @@ function Login() {
         className=""
         value={secretKey}
         placeholder="secret key"
-        onChange={(e) => setSecretKey(e.target.value)}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          setSecretKey(e.target.value)
+        }
       >
         Secret Key
       </VSCodeTextField>

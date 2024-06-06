@@ -4,4 +4,5 @@ export enum storageKeys {
   workspaceDirectory = 'Project root directory',
   loadedUSFMContent = 'store loaded and parsed content to reuse',
   metadataJSON = 'Storing the metadata of the project',
+  cloudUserToken = 'token of logged in cloud user',
 }
