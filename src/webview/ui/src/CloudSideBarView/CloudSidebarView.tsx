@@ -23,7 +23,6 @@ function App() {
       switch (type) {
         case CloudProviderToWebMsgTypes.LoginResponse: {
           // Login response success or failure
-          console.log('response of login in UI ======== : ', data);
           if (data?.loggedIn) {
             setAuthenticated(true);
           } else {
@@ -46,7 +45,7 @@ function App() {
     };
   }, []);
 
-  return <div className="my-2 p-2">{authenticated ? <Repo /> : <Login />}</div>;
+  return <div className="my-2">{authenticated ? <Repo /> : <Login />}</div>;
 }
 
 export default App;

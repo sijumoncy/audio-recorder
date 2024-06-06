@@ -115,6 +115,18 @@ export class CloudSidebarWebViewProvider implements vscode.WebviewViewProvider {
             break;
           }
 
+          // logout
+          case CloudWebToProviderMsgTypes.Logout: {
+            await this.removeSecret(storageKeys.cloudUserToken);
+            this.postMessage(webviewPanel.webview, {
+              type: CloudProviderToWebMsgTypes.LoginResponse,
+              data: {
+                loggedIn: !!this._token?.token,
+                data: null,
+              },
+            });
+          }
+
           default:
             break;
         }
@@ -211,5 +223,6 @@ export class CloudSidebarWebViewProvider implements vscode.WebviewViewProvider {
    */
   private async removeSecret(key: string) {
     await this.context.secrets.delete(key);
+    this._token = null;
   }
 }

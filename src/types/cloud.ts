@@ -9,6 +9,7 @@ export interface IToken {
 export enum CloudWebToProviderMsgTypes {
   RequestToLogin = 'call for login to cloud',
   CheckToken = 'Call to check for Auth',
+  Logout = 'call action to logout session',
 }
 
 export type LoginData = {
