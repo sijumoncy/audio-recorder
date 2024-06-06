@@ -1,5 +1,6 @@
 // import { VSCodeButton } from '@vscode/webview-ui-toolkit/react';
 import React, { useEffect } from 'react';
+import Login from './Components/Login/Login';
 // import { vscode } from '../provider/vscodewebprovider';
 
 function App() {
@@ -35,8 +36,8 @@ function App() {
   }, []);
 
   return (
-    <div className="bg-red-500">
-      <div>View Cloud</div>
+    <div className="my-2 p-2">
+      <Login />
     </div>
   );
 }

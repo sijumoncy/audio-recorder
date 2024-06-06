@@ -18,7 +18,7 @@
   - Pause ⏸
   - Rewind ↺
   - Delete 🗑
-  - Takes 
+  - Takes
 - Verse Level Export
 - Full Project Export
 - Record audio with multiple takes
@@ -56,7 +56,8 @@
 2. Install dependencies with `yarn install`
 3. Install dependencies with `yarn install` for webview (inside `cd src/webview/ui/`)
 4. For building webview UI `yarn run build:all` or developing webview UI `yarn run watch`
-5. `F5` or `debug` for running vscode host development window
+5. For Developing Webview and need to watch and build only 1 app then use `APP_NAME=<Give Your App Name Here> yarn run watch:app`
+6. `F5` or `debug` for running vscode host development window
 
 ### Future Enhancemnets
 
