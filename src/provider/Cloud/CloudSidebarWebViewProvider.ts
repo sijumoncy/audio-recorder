@@ -32,7 +32,14 @@ export class CloudSidebarWebViewProvider implements vscode.WebviewViewProvider {
     ctx: vscode.WebviewViewResolveContext,
     _token: vscode.CancellationToken,
   ): Promise<void> {
+    webviewPanel.webview.options = {
+      enableScripts: true,
+      //   localResourceRoots: [],
+    };
+
+    console.log('in render webview');
     webviewPanel.webview.html = this.getHtmlForWebview(webviewPanel.webview);
+    console.log('After Html Render');
 
     /**
      * Handle recieve message from webview
@@ -68,7 +75,7 @@ export class CloudSidebarWebViewProvider implements vscode.WebviewViewProvider {
         this._context.extensionUri,
         'src',
         'webview-dist',
-        'NavigationView',
+        'CloudSideBarView',
         'index.js',
       ),
     );
@@ -77,7 +84,7 @@ export class CloudSidebarWebViewProvider implements vscode.WebviewViewProvider {
         this._context.extensionUri,
         'src',
         'webview-dist',
-        'NavigationView',
+        'CloudSideBarView',
         'index.css',
       ),
     );
