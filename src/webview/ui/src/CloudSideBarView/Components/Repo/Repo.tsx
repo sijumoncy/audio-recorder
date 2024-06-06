@@ -2,6 +2,7 @@ import React from 'react';
 import { vscode } from '../../../provider/vscodewebprovider';
 import { VSCodeButton } from '@vscode/webview-ui-toolkit/react';
 import { CloudWebToProviderMsgTypes } from '../../../../../../types/cloud';
+import ProjectsList from '../Projects/ProjectsList';
 
 function Repo() {
   const handleLogout = () => {
@@ -18,7 +19,10 @@ function Repo() {
           Logout
         </VSCodeButton>
       </div>
-      <div className="">Repo</div>
+      <div className="flex flex-col gap-2">
+        <h3 className="font-medium text-sm">Projects</h3>
+        <ProjectsList />
+      </div>
     </div>
   );
 }

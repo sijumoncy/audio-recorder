@@ -5,6 +5,8 @@ import {
   CloudProviderToWebMsgTypes,
   CloudUIToExtMsg,
   CloudWebToProviderMsgTypes,
+  IGetRepoResponse,
+  IRepo,
   IToken,
 } from '../../types/cloud';
 import { storageKeys } from '../../types/storage';
@@ -28,11 +30,13 @@ export class CloudSidebarWebViewProvider implements vscode.WebviewViewProvider {
   private _context: vscode.ExtensionContext;
   private readonly globalState: vscode.Memento;
   private _token: IToken | null;
+  private _projects: [];
 
   constructor(private readonly context: vscode.ExtensionContext) {
     this._context = context;
     this.globalState = context.workspaceState;
     this._token = null;
+    this._projects = [];
     this.getSecret(storageKeys.cloudUserToken);
   }
 
@@ -125,6 +129,30 @@ export class CloudSidebarWebViewProvider implements vscode.WebviewViewProvider {
                 data: null,
               },
             });
+          }
+
+          // get projects
+          case CloudWebToProviderMsgTypes.FetchProjects: {
+            // TODO : All TOken Checks needs to be changed with expiry time validation
+            // TODO : Check current open projects name and if open only fetch that and auto display other panels
+            if (this._token) {
+              try {
+                const response = await axios.get(
+                  `${environment.BASE_CLOUD_URL}/repositories`,
+                  { headers: { Authorization: `Bearer ${this._token.token}` } },
+                );
+                const data = response.data as IGetRepoResponse;
+                const projects = data.results;
+
+                webviewPanel.webview.postMessage({
+                  type: CloudProviderToWebMsgTypes.ProjectsList,
+                  data: projects,
+                });
+              } catch (error) {
+                console.log('errr fetch project : ', error);
+                vscode.window.showErrorMessage(`Unable to get Project`);
+              }
+            }
           }
 
           default:
