@@ -164,7 +164,8 @@
     "ts-loader": "^9.5.1",
     "typescript": "^5.3.3",
     "webpack": "^5.90.3",
-    "webpack-cli": "^5.1.4"
+    "webpack-cli": "^5.1.4",
+    "@vscode/codicons": "^0.0.36"
   },
   "dependencies": {
     "@vscode/webview-ui-toolkit": "^1.4.0",

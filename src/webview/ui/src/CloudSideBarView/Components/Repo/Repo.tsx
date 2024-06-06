@@ -14,8 +14,19 @@ function Repo() {
 
   return (
     <div className="flex flex-col gap-5">
-      <div className="w-full flex justify-end px-2">
-        <VSCodeButton className="" onClick={handleLogout}>
+      <div className="w-full flex justify-between px-2 ">
+        <VSCodeButton
+          className=""
+          onClick={handleLogout}
+          title="Sync Current project to cloud"
+        >
+          Sync
+          <span slot="start" className="icon">
+            <i className="codicon codicon-repo-push"></i>
+          </span>
+        </VSCodeButton>
+
+        <VSCodeButton className="bg-purple-500" onClick={handleLogout}>
           Logout
         </VSCodeButton>
       </div>

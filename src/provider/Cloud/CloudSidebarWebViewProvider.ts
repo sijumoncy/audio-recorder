@@ -183,6 +183,18 @@ export class CloudSidebarWebViewProvider implements vscode.WebviewViewProvider {
         'index.js',
       ),
     );
+
+    const codiconsUri = webview.asWebviewUri(
+      vscode.Uri.joinPath(
+        this._context.extensionUri,
+        'node_modules',
+        '@vscode',
+        'codicons',
+        'dist',
+        'codicon.css',
+      ),
+    );
+
     const styleVSCodeUri = webview.asWebviewUri(
       vscode.Uri.joinPath(
         this._context.extensionUri,
@@ -209,8 +221,9 @@ export class CloudSidebarWebViewProvider implements vscode.WebviewViewProvider {
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             
             <link href="${styleVSCodeUri}" rel="stylesheet" />
+            <link href="${codiconsUri}" rel="stylesheet" />
             
-            <title>Scribe Audio Navigation</title>
+            <title>Scribe Cloud</title>
         </head>
         <body>
             <div id="root"></div>
