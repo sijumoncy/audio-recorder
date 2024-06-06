@@ -1,5 +1,11 @@
 import * as vscode from 'vscode';
 import { getNonce } from '../../utils/getNonce';
+import axios from 'axios';
+import {
+  CloudProviderToWebMsgTypes,
+  CloudUIToExtMsg,
+  CloudWebToProviderMsgTypes,
+} from '../../types/cloud';
 
 export class CloudSidebarWebViewProvider implements vscode.WebviewViewProvider {
   /**
@@ -45,9 +51,39 @@ export class CloudSidebarWebViewProvider implements vscode.WebviewViewProvider {
      * Handle recieve message from webview
      */
     webviewPanel.webview.onDidReceiveMessage(
-      async (e: { type: any; data: any }) => {
+      async (e: {
+        type: CloudWebToProviderMsgTypes;
+        data: CloudUIToExtMsg;
+      }) => {
         switch (e.type) {
-          case '': {
+          case CloudWebToProviderMsgTypes.RequestToLogin: {
+            console.log('data  : ', e.data);
+
+            axios
+              .post('http://127.0.0.1:8001/api/v1/auth/login', e.data)
+              .then(function (response: any) {
+                const tokenData = response;
+                console.log('========>', tokenData.token);
+                console.log('========>', tokenData.token_expiration);
+                webviewPanel.webview.postMessage({
+                  type: CloudProviderToWebMsgTypes.LoginResponse,
+                  data: {
+                    status: 'success',
+                    data: null,
+                  },
+                });
+              })
+              .catch(function (error) {
+                console.log('errr : ', error?.message);
+                webviewPanel.webview.postMessage({
+                  type: CloudProviderToWebMsgTypes.LoginResponse,
+                  data: {
+                    status: 'failed',
+                    data: null,
+                  },
+                });
+              });
+
             break;
           }
 
@@ -98,7 +134,9 @@ export class CloudSidebarWebViewProvider implements vscode.WebviewViewProvider {
         <head>
             <meta charset="UTF-8">
             
-            <meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src ${webview.cspSource} blob:; style-src ${webview.cspSource}; script-src 'nonce-${nonce}';">
+            <!--meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src ${webview.cspSource} blob:; style-src ${webview.cspSource}; script-src 'nonce-${nonce}';"-->
+            <meta http-equiv="Content-Security-Policy" content="default-src *; img-src ${webview.cspSource} http: https:;
+              script-src ${webview.cspSource}; 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'unsafe-inline' http: https: data: *;">
             
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             

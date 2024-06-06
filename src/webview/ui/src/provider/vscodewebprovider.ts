@@ -1,6 +1,7 @@
 import type { WebviewApi } from 'vscode-webview';
 import { EditorUItoExtMsg } from '../../../../types/editor';
 import { NavUItoExtMsg } from '../../../../types/navigationView';
+import { CloudUIToExtMsg } from '../../../../types/cloud';
 
 class VsCodeWebInstanceProvider {
   private readonly vsCodeApi: WebviewApi<unknown> | undefined;
@@ -16,7 +17,9 @@ class VsCodeWebInstanceProvider {
    * post event to provider
    * non primitive values should be serialised
    */
-  public postMessage(message: EditorUItoExtMsg | NavUItoExtMsg) {
+  public postMessage(
+    message: EditorUItoExtMsg | NavUItoExtMsg | CloudUIToExtMsg,
+  ) {
     if (this.vsCodeApi) {
       this.vsCodeApi.postMessage(message);
     }
