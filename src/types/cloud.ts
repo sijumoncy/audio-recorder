@@ -1,8 +1,14 @@
+export interface IToken {
+  token: string;
+  token_expiration: number;
+}
+
 /**
  *  --------------------------   WEB TO PROVIDER --------------------------
  */
 export enum CloudWebToProviderMsgTypes {
   RequestToLogin = 'call for login to cloud',
+  CheckToken = 'Call to check for Auth',
 }
 
 export type LoginData = {
@@ -14,7 +20,7 @@ export type CloudWebToExtData = LoginData;
 
 export type CloudUIToExtMsg = {
   type: CloudWebToProviderMsgTypes;
-  data: CloudWebToExtData;
+  data: CloudWebToExtData | null;
 };
 
 /**

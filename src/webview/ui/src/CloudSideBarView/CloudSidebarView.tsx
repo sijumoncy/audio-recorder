@@ -1,18 +1,22 @@
 // import { VSCodeButton } from '@vscode/webview-ui-toolkit/react';
 import React, { useEffect, useState } from 'react';
 import Login from './Components/Login/Login';
-import { CloudProviderToWebMsgTypes } from '../../../../types/cloud';
-// import { vscode } from '../provider/vscodewebprovider';
+import Repo from './Components/Repo/Repo';
+import {
+  CloudProviderToWebMsgTypes,
+  CloudWebToProviderMsgTypes,
+} from '../../../../types/cloud';
+import { vscode } from '../provider/vscodewebprovider';
 
 function App() {
   const [authenticated, setAuthenticated] = useState<boolean>(false);
 
   useEffect(() => {
     // listen for vscode.postmessage event from extension to webview here
-    // vscode.postMessage({
-    //   type: NavWebToExtMsgTypes.FetchVersification,
-    //   data: null,
-    // });
+    vscode.postMessage({
+      type: CloudWebToProviderMsgTypes.CheckToken,
+      data: null,
+    });
 
     const handleExtensionPostMessages = (event: MessageEvent) => {
       const { type, data } = event.data;
@@ -42,11 +46,7 @@ function App() {
     };
   }, []);
 
-  return (
-    <div className="my-2 p-2">
-      {authenticated ? <div>LoggedIN</div> : <Login />}
-    </div>
-  );
+  return <div className="my-2 p-2">{authenticated ? <Repo /> : <Login />}</div>;
 }
 
 export default App;

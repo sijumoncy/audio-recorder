@@ -5,6 +5,7 @@ import {
   CloudProviderToWebMsgTypes,
   CloudUIToExtMsg,
   CloudWebToProviderMsgTypes,
+  IToken,
 } from '../../types/cloud';
 import { storageKeys } from '../../types/storage';
 import { environment } from '../../environment';
@@ -26,10 +27,13 @@ export class CloudSidebarWebViewProvider implements vscode.WebviewViewProvider {
   private _webviewView: vscode.WebviewView | undefined;
   private _context: vscode.ExtensionContext;
   private readonly globalState: vscode.Memento;
+  private _token: IToken | null;
 
   constructor(private readonly context: vscode.ExtensionContext) {
     this._context = context;
     this.globalState = context.workspaceState;
+    this._token = null;
+    this.getSecret(storageKeys.cloudUserToken);
   }
 
   /**
@@ -45,9 +49,7 @@ export class CloudSidebarWebViewProvider implements vscode.WebviewViewProvider {
       //   localResourceRoots: [],
     };
 
-    console.log('in render webview');
     webviewPanel.webview.html = this.getHtmlForWebview(webviewPanel.webview);
-    console.log('After Html Render');
 
     /**
      * Handle recieve message from webview
@@ -58,6 +60,22 @@ export class CloudSidebarWebViewProvider implements vscode.WebviewViewProvider {
         data: CloudUIToExtMsg;
       }) => {
         switch (e.type) {
+          // Initial check for session
+          case CloudWebToProviderMsgTypes.CheckToken: {
+            const token = await this.getSecret(storageKeys.cloudUserToken);
+            // TODO : Need to check the expiry of the token here
+            this.postMessage(webviewPanel.webview, {
+              type: CloudProviderToWebMsgTypes.LoginResponse,
+              data: {
+                loggedIn: !!token?.token,
+                data: null,
+              },
+            });
+
+            break;
+          }
+
+          // Request Login Try to Login
           case CloudWebToProviderMsgTypes.RequestToLogin: {
             console.log('data  : ', e.data);
 
@@ -77,13 +95,14 @@ export class CloudSidebarWebViewProvider implements vscode.WebviewViewProvider {
 
               if (tokenData?.token) {
                 // store the token data
+                this._token = tokenData;
                 this.storeSecret(
                   storageKeys.cloudUserToken,
                   JSON.stringify(tokenData),
                 );
               }
             } catch (error) {
-              console.log('errr : ', error?.message);
+              console.log('errr : ', error);
               webviewPanel.webview.postMessage({
                 type: CloudProviderToWebMsgTypes.LoginResponse,
                 data: {
@@ -174,21 +193,23 @@ export class CloudSidebarWebViewProvider implements vscode.WebviewViewProvider {
   /**
    * store secrets
    */
-  private storeSecret(key: string, value: string) {
-    this.context.secrets.store(key, value);
+  private async storeSecret(key: string, value: string) {
+    await this.context.secrets.store(key, value);
   }
 
   /**
    * get secrets
    */
-  private getSecret(key: string, value: string) {
-    this.context.secrets.get(key);
+  private async getSecret(key: string) {
+    const tokenData = await this.context.secrets.get(key);
+    this._token = tokenData ? JSON.parse(tokenData) : tokenData;
+    return this._token;
   }
 
   /**
    * delete secrets
    */
-  private removeSecret(key: string, value: string) {
-    this.context.secrets.delete(key);
+  private async removeSecret(key: string) {
+    await this.context.secrets.delete(key);
   }
 }

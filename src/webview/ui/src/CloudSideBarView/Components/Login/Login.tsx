@@ -29,22 +29,21 @@ function Login() {
 
   useEffect(() => {
     const handleExtensionPostMessages = (event: MessageEvent) => {
-      const { type, data } = event.data as CloudExtToUIMsg;
-      switch (type) {
-        // case CloudProviderToWebMsgTypes.LoginResponse: {
-        //   // Login response success or failure
-        //   console.log('response of login in UI ======== : ', data);
-        //   if (data.data?.token) {
-        //     setAuthenticated(true);
-        //   } else {
-        //     setAuthenticated(false);
-        //   }
-        //   break;
-        // }
-
-        default:
-          break;
-      }
+      // const { type, data } = event.data as CloudExtToUIMsg;
+      // switch (type) {
+      //   case CloudProviderToWebMsgTypes.LoginResponse: {
+      //     // Login response success or failure
+      //     console.log('response of login in UI ======== : ', data);
+      //     if (data.data?.token) {
+      //       setAuthenticated(true);
+      //     } else {
+      //       setAuthenticated(false);
+      //     }
+      //     break;
+      //   }
+      //   default:
+      //     break;
+      // }
     };
 
     // add listener for the event
