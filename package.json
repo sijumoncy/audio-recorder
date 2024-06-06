@@ -53,6 +53,12 @@
           "visibility": "visible",
           "icon": "images/logo.png",
           "contextualTitle": "Audio Explorer"
+        },
+        {
+          "id": "audio-explorer-cloud",
+          "name": "Audio Cloud",
+          "visibility": "visible",
+          "contextualTitle": "Audio Cloud"
         }
       ]
     },
