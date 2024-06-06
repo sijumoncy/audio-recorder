@@ -15,6 +15,7 @@ import { NavigationWebViewProvider } from './provider/Navigation/navigationWebVi
 import { storageKeys } from './types/storage';
 import { exportAudio } from './utils/exportAudio';
 import { importUSFM } from './utils/importUSFM';
+import { CloudSidebarWebViewProvider } from './provider/Cloud/CloudSidebarWebViewProvider';
 
 // get root path of opened workspace in vscode
 const ROOT_PATH = getWorkSpaceFolder();
@@ -211,6 +212,12 @@ export function activate(context: vscode.ExtensionContext) {
    * Register Navigation sidebar provider
    */
   context.subscriptions.push(NavigationWebViewProvider.register(context));
+
+  /**
+   * Register Audio Cloud Provider sidebar
+   */
+
+  context.subscriptions.push(CloudSidebarWebViewProvider.register(context));
 
   /**
    * Export Verse Level Command

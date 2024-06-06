@@ -56,6 +56,7 @@
         },
         {
           "id": "audio-explorer-cloud",
+          "type": "webview",
           "name": "Audio Cloud",
           "visibility": "visible",
           "contextualTitle": "Audio Cloud"
