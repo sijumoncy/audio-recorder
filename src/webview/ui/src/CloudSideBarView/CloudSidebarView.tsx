@@ -1,9 +1,12 @@
 // import { VSCodeButton } from '@vscode/webview-ui-toolkit/react';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Login from './Components/Login/Login';
+import { CloudProviderToWebMsgTypes } from '../../../../types/cloud';
 // import { vscode } from '../provider/vscodewebprovider';
 
 function App() {
+  const [authenticated, setAuthenticated] = useState<boolean>(false);
+
   useEffect(() => {
     // listen for vscode.postmessage event from extension to webview here
     // vscode.postMessage({
@@ -14,10 +17,14 @@ function App() {
     const handleExtensionPostMessages = (event: MessageEvent) => {
       const { type, data } = event.data;
       switch (type) {
-        case '': {
-          // processed vesification data from workspace dir
-          console.log('data ', data);
-
+        case CloudProviderToWebMsgTypes.LoginResponse: {
+          // Login response success or failure
+          console.log('response of login in UI ======== : ', data);
+          if (data?.loggedIn) {
+            setAuthenticated(true);
+          } else {
+            setAuthenticated(false);
+          }
           break;
         }
 
@@ -37,7 +44,7 @@ function App() {
 
   return (
     <div className="my-2 p-2">
-      <Login />
+      {authenticated ? <div>LoggedIN</div> : <Login />}
     </div>
   );
 }

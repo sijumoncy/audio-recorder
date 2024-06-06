@@ -26,7 +26,7 @@ export enum CloudProviderToWebMsgTypes {
 }
 
 export type LoginResponse = {
-  status: 'success' | 'error';
+  loggedIn: boolean;
   data: any;
 };
 

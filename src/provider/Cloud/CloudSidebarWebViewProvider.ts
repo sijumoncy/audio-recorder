@@ -52,52 +52,6 @@ export class CloudSidebarWebViewProvider implements vscode.WebviewViewProvider {
     /**
      * Handle recieve message from webview
      */
-    // webviewPanel.webview.onDidReceiveMessage(
-    //   async (e: {
-    //     type: CloudWebToProviderMsgTypes;
-    //     data: CloudUIToExtMsg;
-    //   }) => {
-    //     switch (e.type) {
-    //       case CloudWebToProviderMsgTypes.RequestToLogin: {
-    //         console.log('data  : ', e.data);
-
-    //         axios
-    //           .post('http://127.0.0.1:8001/api/v1/auth/login', e.data)
-    //           .then(function (response: any) {
-    //             const tokenData = response;
-    //             console.log('========>', tokenData.token);
-    //             console.log('========>', tokenData.token_expiration);
-    //             webviewPanel.webview.postMessage({
-    //               type: CloudProviderToWebMsgTypes.LoginResponse,
-    //               data: {
-    //                 status: 'success',
-    //                 data: null,
-    //               },
-    //             });
-    //             if (tokenData?.token) {
-    //               this => here getting errroe of this context
-    //             }
-    //           })
-    //           .catch(function (error) {
-    //             console.log('errr : ', error?.message);
-    //             webviewPanel.webview.postMessage({
-    //               type: CloudProviderToWebMsgTypes.LoginResponse,
-    //               data: {
-    //                 status: 'failed',
-    //                 data: null,
-    //               },
-    //             });
-    //           });
-
-    //         break;
-    //       }
-
-    //       default:
-    //         break;
-    //     }
-    //   },
-    // );
-
     webviewPanel.webview.onDidReceiveMessage(
       async (e: {
         type: CloudWebToProviderMsgTypes;
@@ -116,7 +70,7 @@ export class CloudSidebarWebViewProvider implements vscode.WebviewViewProvider {
               webviewPanel.webview.postMessage({
                 type: CloudProviderToWebMsgTypes.LoginResponse,
                 data: {
-                  status: 'success',
+                  loggedIn: true,
                   data: null,
                 },
               });
@@ -133,7 +87,7 @@ export class CloudSidebarWebViewProvider implements vscode.WebviewViewProvider {
               webviewPanel.webview.postMessage({
                 type: CloudProviderToWebMsgTypes.LoginResponse,
                 data: {
-                  status: 'failed',
+                  loggedIn: false,
                   data: null,
                 },
               });
