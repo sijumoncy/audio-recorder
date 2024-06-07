@@ -28,7 +28,9 @@
     "src/NavigationView/NavigationView.tsx",
     "src/NavigationView/index.tsx",
     "src/CloudSideBarView/CloudSideBarView.tsx",
-    "src/CloudSideBarView/index.tsx"
+    "src/CloudSideBarView/index.tsx",
+    "src/CloudPanelView/CloudPanelView.tsx",
+    "src/CloudPanelView/index.tsx"
   ],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

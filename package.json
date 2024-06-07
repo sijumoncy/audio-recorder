@@ -60,6 +60,13 @@
           "name": "Audio Cloud",
           "visibility": "visible",
           "contextualTitle": "Audio Cloud"
+        },
+        {
+          "id": "audio-explorer-cloud-panel",
+          "type": "webview",
+          "name": "Audio Cloud Panel",
+          "visibility": "visible",
+          "contextualTitle": "Audio Cloud Panel"
         }
       ]
     },
@@ -133,6 +140,11 @@
       {
         "command": "scribe-audio.importUSFM",
         "title": "Import USFM's",
+        "category": "ScribeAudio"
+      },
+      {
+        "command": "scribe-audio.openCloudPanel",
+        "title": "Cloud Panel",
         "category": "ScribeAudio"
       }
     ]

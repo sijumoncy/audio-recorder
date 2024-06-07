@@ -180,6 +180,12 @@ export class CloudSidebarWebViewProvider implements vscode.WebviewViewProvider {
             break;
           }
 
+          case CloudWebToProviderMsgTypes.selectProject: {
+            console.log('in select project ********* ----- ', e.data);
+            this.updateGlobalState(storageKeys.selectedCloudProject, e.data);
+            vscode.commands.executeCommand('scribe-audio.openCloudPanel');
+          }
+
           default:
             break;
         }

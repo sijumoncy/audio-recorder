@@ -16,6 +16,10 @@ import { storageKeys } from './types/storage';
 import { exportAudio } from './utils/exportAudio';
 import { importUSFM } from './utils/importUSFM';
 import { CloudSidebarWebViewProvider } from './provider/Cloud/CloudSidebarWebViewProvider';
+import {
+  CloudPanelProviderInstance,
+  initCloudPanel,
+} from './provider/Cloud/CloudPanelWebViewProvider';
 
 // get root path of opened workspace in vscode
 const ROOT_PATH = getWorkSpaceFolder();
@@ -220,6 +224,15 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(CloudSidebarWebViewProvider.register(context));
 
   /**
+   * Register Audio Cloud Details Panel
+   */
+  context.subscriptions.push(
+    vscode.commands.registerCommand('scribe-audio.openCloudPanel', async () => {
+      await initCloudPanel(context);
+    }),
+  );
+
+  /**
    * Export Verse Level Command
    */
   context.subscriptions.push(
@@ -277,5 +290,8 @@ export function activate(context: vscode.ExtensionContext) {
 export function deactivate() {
   if (scribeAudioEditorInstance) {
     scribeAudioEditorInstance.dispose();
+  }
+  if (CloudPanelProviderInstance) {
+    CloudPanelProviderInstance.dispose();
   }
 }

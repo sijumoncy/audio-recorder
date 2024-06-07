@@ -41,6 +41,13 @@ function ProjectsList() {
     };
   }, []);
 
+  const handleSelectProject = (id: string) => {
+    vscode.postMessage({
+      type: CloudWebToProviderMsgTypes.selectProject,
+      data: id,
+    });
+  };
+
   console.log({ projects });
 
   return (
@@ -50,7 +57,12 @@ function ProjectsList() {
           <div>
             <Git classes={`w-5 h-5`} />
           </div>
-          <span className="cursor-pointer hover:underline">{project.id}</span>
+          <span
+            className="cursor-pointer hover:underline"
+            onClick={() => handleSelectProject(project.id)}
+          >
+            {project.id}
+          </span>
         </div>
       ))}
     </div>

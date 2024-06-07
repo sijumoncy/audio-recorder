@@ -1,3 +1,5 @@
+import { Interface } from 'readline';
+
 export interface IToken {
   token: string;
   token_expiration: number;
@@ -34,15 +36,27 @@ export interface IObjectUploadAPIResponse {
   size_bytes: number;
 }
 
+export interface IReponseListFiles {
+  pagination: IAPIPaginationObj;
+  results: Omit<IObjectUploadAPIResponse, 'metadata'>[];
+}
+
 /**
  *  --------------------------   WEB TO PROVIDER --------------------------
  */
+// enum for msg type from web sidebar ui to provider
 export enum CloudWebToProviderMsgTypes {
   RequestToLogin = 'call for login to cloud',
   CheckToken = 'Call to check for Auth',
   Logout = 'call action to logout session',
   FetchProjects = 'get projects from cloud',
   syncCurrentProject = 'sync current project to cloud',
+  selectProject = 'select project to show details panel',
+}
+
+// enum for msg type from web panel to panel provider
+export enum CloudWebPanelToProviderMsgTypes {
+  CheckAuthAndRepoData = 'initial call to check auth and get the repo data',
 }
 
 export type LoginData = {
@@ -53,17 +67,23 @@ export type LoginData = {
 export type CloudWebToExtData = LoginData;
 
 export type CloudUIToExtMsg = {
-  type: CloudWebToProviderMsgTypes;
-  data: CloudWebToExtData | null;
+  type: CloudWebToProviderMsgTypes | CloudWebPanelToProviderMsgTypes;
+  data: CloudWebToExtData | null | string;
 };
 
 /**
  *  --------------------------  PROVIDER TO WEB --------------------------
  */
 
+//
 export enum CloudProviderToWebMsgTypes {
   LoginResponse = 'Response of login',
   ProjectsList = 'project / repo data',
+}
+
+// enum for msg type from web panel to panel provider
+export enum CloudPanelProviderToWebMsgTypes {
+  AuthRepoResponse = 'AUthandRepoResponse on start',
 }
 
 export type LoginResponse = {

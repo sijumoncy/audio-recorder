@@ -3,7 +3,12 @@
  */
 
 import axios from 'axios';
-import { IObjectUploadAPIResponse, IRepo, IToken } from '../../../types/cloud';
+import {
+  IObjectUploadAPIResponse,
+  IRepo,
+  IReponseListFiles,
+  IToken,
+} from '../../../types/cloud';
 import { environment } from '../../../environment';
 import { BinaryLike } from 'crypto';
 
@@ -106,6 +111,30 @@ export async function uploadObject(
       return { error: true, data: err.response?.data };
     }
     console.log('Upload Object Error');
+    return { error: true, data: null };
+  }
+}
+
+export async function listRepoContentsWithPattern(
+  token: string,
+  repoName: string,
+  branch: string,
+  prefix?: string,
+) {
+  let url = `${environment.BASE_CLOUD_URL}/repositories/${repoName}/refs/${branch}/objects/ls`;
+  if (prefix) {
+    url += `?prefix=${prefix}`;
+  }
+  try {
+    const repoContents = await axios.get(url, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return repoContents.data as IReponseListFiles;
+  } catch (err) {
+    if (axios.isAxiosError(err)) {
+      console.log(`Erororr ))))))))))  ${prefix} : `, err);
+      return { error: true, data: err.response?.data };
+    }
     return { error: true, data: null };
   }
 }
