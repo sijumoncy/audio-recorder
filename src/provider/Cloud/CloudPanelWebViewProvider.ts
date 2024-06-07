@@ -16,7 +16,11 @@ import { storageKeys } from '../../types/storage';
 import { environment } from '../../environment';
 import { projectSync } from './Functions/projectSync';
 import { IAudioBurrito } from '../../types/audio';
-import { getRepo, listRepoContentsWithPattern } from './Functions/cloudUtils';
+import {
+  getCommitsOfPathPrefixes,
+  getRepo,
+  listRepoContentsWithPattern,
+} from './Functions/cloudUtils';
 
 export class CloudPanelWebViewProvider {
   private panel: vscode.WebviewPanel | undefined;
@@ -100,6 +104,32 @@ export class CloudPanelWebViewProvider {
                 }
               }
 
+              break;
+            }
+
+            case CloudWebPanelToProviderMsgTypes.getPathVersion: {
+              const inputData = e.data as unknown as {
+                path: string;
+                repo: IRepo;
+              };
+              // { path: path, repo: repoData }
+              const token = await this.getSecret(storageKeys.cloudUserToken);
+              if (token?.token && this._selectedProject) {
+                const filepathVersionData = await getCommitsOfPathPrefixes(
+                  token.token,
+                  inputData.repo.id,
+                  inputData.repo.default_branch,
+                  inputData.path,
+                );
+
+                console.log('filepathVersionData : ', filepathVersionData);
+                if (this.panel?.webview && filepathVersionData) {
+                  this.postMessage(this.panel.webview, {
+                    type: CloudPanelProviderToWebMsgTypes.pathVersionResponse,
+                    data: filepathVersionData,
+                  });
+                }
+              }
               break;
             }
           }

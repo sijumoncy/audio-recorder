@@ -41,6 +41,18 @@ export interface IReponseListFiles {
   results: Omit<IObjectUploadAPIResponse, 'metadata'>[];
 }
 
+export interface IPathCommitResponse {
+  committer: string;
+  creation_date: number;
+  generation: number;
+  id: string;
+  message: string;
+  meta_range_id: string;
+  metadata: object;
+  parents: string[];
+  version: number;
+}
+
 /**
  *  --------------------------   WEB TO PROVIDER --------------------------
  */
@@ -57,6 +69,7 @@ export enum CloudWebToProviderMsgTypes {
 // enum for msg type from web panel to panel provider
 export enum CloudWebPanelToProviderMsgTypes {
   CheckAuthAndRepoData = 'initial call to check auth and get the repo data',
+  getPathVersion = 'get versions of a paht',
 }
 
 export type LoginData = {
@@ -68,7 +81,7 @@ export type CloudWebToExtData = LoginData;
 
 export type CloudUIToExtMsg = {
   type: CloudWebToProviderMsgTypes | CloudWebPanelToProviderMsgTypes;
-  data: CloudWebToExtData | null | string;
+  data: CloudWebToExtData | null | string | IRepo | any;
 };
 
 /**
@@ -84,6 +97,7 @@ export enum CloudProviderToWebMsgTypes {
 // enum for msg type from web panel to panel provider
 export enum CloudPanelProviderToWebMsgTypes {
   AuthRepoResponse = 'AUthandRepoResponse on start',
+  pathVersionResponse = 'response of the selected path version',
 }
 
 export type LoginResponse = {
