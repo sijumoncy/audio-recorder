@@ -70,6 +70,7 @@ export enum CloudWebToProviderMsgTypes {
 export enum CloudWebPanelToProviderMsgTypes {
   CheckAuthAndRepoData = 'initial call to check auth and get the repo data',
   getPathVersion = 'get versions of a paht',
+  getAudioWithCOmmitId = 'get commtId audio',
 }
 
 export type LoginData = {

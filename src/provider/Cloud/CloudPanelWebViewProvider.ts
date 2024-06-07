@@ -132,6 +132,18 @@ export class CloudPanelWebViewProvider {
               }
               break;
             }
+
+            case CloudWebPanelToProviderMsgTypes.getAudioWithCOmmitId: {
+              console.log('load audio : ', e.data);
+              // const { path } = e.data as unknown as {
+              //   commitId: string;
+              //   path: string;
+              // };
+
+              // const {p} = e.data;
+              // const
+              // const audioLink
+            }
           }
         },
       );

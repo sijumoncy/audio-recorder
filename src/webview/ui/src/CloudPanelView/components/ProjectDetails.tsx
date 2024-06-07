@@ -20,6 +20,7 @@ function ProjectDetails({ repodata }: IProjectDetails) {
   const [pathVersions, setPathVersions] = useState<IPathCommitResponse[] | []>(
     [],
   );
+  const [path, setPath] = useState<string | null>(null);
   const [audioLink, setAudioLink] = useState<string | null>(null);
 
   const creationDate = React.useMemo(() => {
@@ -31,13 +32,19 @@ function ProjectDetails({ repodata }: IProjectDetails) {
   }, [repodata?.repoBase.creation_date]);
 
   const handleGetVersions = async (path: string, repoData: IRepo) => {
+    setPath(path);
     vscode.postMessage({
       type: CloudWebPanelToProviderMsgTypes.getPathVersion,
       data: { path: path, repo: repoData },
     });
   };
 
-  const handleGetAudio = () => {};
+  const handleGetAudio = (commitId: string) => {
+    vscode.postMessage({
+      type: CloudWebPanelToProviderMsgTypes.getAudioWithCOmmitId,
+      data: { commitId: commitId, path: path },
+    });
+  };
 
   useEffect(() => {
     // listen for vscode.postmessage event from extension to webview here
@@ -92,7 +99,10 @@ function ProjectDetails({ repodata }: IProjectDetails) {
             const _created = new Date(version.creation_date);
             const createdDate = _created.toString();
             return (
-              <div className="flex gap-2" onClick={handleGetAudio}>
+              <div
+                className="flex gap-2"
+                onClick={() => handleGetAudio(version.id)}
+              >
                 <VSCodeBadge>{index + 1}</VSCodeBadge>
                 <div className="flex flex-col gap-1">
                   <p>{version.id}</p>
