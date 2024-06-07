@@ -12,6 +12,9 @@ import { createRepo, getRepo } from './cloudUtils';
 export async function projectSync(metadata: IAudioBurrito, token: IToken) {
   console.log('in project sync ', metadata);
 
+  // Check and init git in local for the project
+  // INFO: As of now , no git init on project creation. only check on first sync
+
   // get project name with id
   const projectName = metadata.identification.name.en;
   const projectIdObj = metadata.identification.primary['scribe'];
