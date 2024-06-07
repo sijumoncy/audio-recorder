@@ -12,12 +12,19 @@ function Repo() {
     });
   };
 
+  const handleSyncCurrentProject = () => {
+    vscode.postMessage({
+      type: CloudWebToProviderMsgTypes.syncCurrentProject,
+      data: null,
+    });
+  };
+
   return (
     <div className="flex flex-col gap-5">
       <div className="w-full flex justify-between px-2 ">
         <VSCodeButton
           className=""
-          onClick={handleLogout}
+          onClick={handleSyncCurrentProject}
           title="Sync Current project to cloud"
         >
           Sync

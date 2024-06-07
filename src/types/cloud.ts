@@ -31,6 +31,7 @@ export enum CloudWebToProviderMsgTypes {
   CheckToken = 'Call to check for Auth',
   Logout = 'call action to logout session',
   FetchProjects = 'get projects from cloud',
+  syncCurrentProject = 'sync current project to cloud',
 }
 
 export type LoginData = {

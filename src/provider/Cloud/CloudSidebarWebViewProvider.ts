@@ -11,6 +11,8 @@ import {
 } from '../../types/cloud';
 import { storageKeys } from '../../types/storage';
 import { environment } from '../../environment';
+import { projectSync } from './Functions/projectSync';
+import { IAudioBurrito } from '../../types/audio';
 
 export class CloudSidebarWebViewProvider implements vscode.WebviewViewProvider {
   /**
@@ -153,6 +155,29 @@ export class CloudSidebarWebViewProvider implements vscode.WebviewViewProvider {
                 vscode.window.showErrorMessage(`Unable to get Project`);
               }
             }
+            break;
+          }
+
+          case CloudWebToProviderMsgTypes.syncCurrentProject: {
+            console.log('In Sync Current Project');
+            try {
+              // read metadata from global state
+              const metadata = this.getGlobalState(storageKeys.metadataJSON);
+              // TODO : Token expiry check. Probably add a middleware to check
+              if (metadata && this._token?.token) {
+                let meta = JSON.parse(metadata) as IAudioBurrito;
+                await projectSync(meta, this._token);
+              } else {
+                throw new Error('No Project Opened. metadata not found');
+              }
+            } catch (err: any) {
+              if (err?.message) {
+                vscode.window.showErrorMessage(err?.message);
+              } else {
+                console.log('Error in Sync Project : ', err);
+              }
+            }
+            break;
           }
 
           default:
