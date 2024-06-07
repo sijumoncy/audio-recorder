@@ -3,8 +3,9 @@
  */
 
 import axios from 'axios';
-import { IRepo, IToken } from '../../../types/cloud';
+import { IObjectUploadAPIResponse, IRepo, IToken } from '../../../types/cloud';
 import { environment } from '../../../environment';
+import { BinaryLike } from 'crypto';
 
 /**
  *
@@ -74,5 +75,37 @@ export async function createRepo(
       throw new Error(err.response?.data?.message || err.message);
     }
     throw new Error(err.message);
+  }
+}
+
+/**
+ *
+ * @param params
+ * Function to upload single binary object
+ */
+export async function uploadObject(
+  token: string,
+  repoName: string,
+  branch: string,
+  path: string,
+  data: BinaryLike,
+) {
+  try {
+    const response = await axios.post(
+      `${environment.BASE_CLOUD_URL}/repositories/${repoName}/branches/${branch}/objects?path=${path}`,
+      data,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      },
+    );
+
+    return response.data as IObjectUploadAPIResponse;
+  } catch (err: any) {
+    if (axios.isAxiosError(err)) {
+      console.log(`Erororr ))))))))))  ${path} : `, err);
+      return { error: true, data: err.response?.data };
+    }
+    console.log('Upload Object Error');
+    return { error: true, data: null };
   }
 }

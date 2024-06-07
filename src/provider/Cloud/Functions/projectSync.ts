@@ -35,5 +35,6 @@ export async function projectSync(metadata: IAudioBurrito, token: IToken) {
   // exiting Project or created
   if (repoData) {
     console.log('Existing Project ===> ', repoData.id);
+    // upload data to cloud
   }
 }

@@ -157,6 +157,7 @@
     "@types/vscode": "^1.86.0",
     "@typescript-eslint/eslint-plugin": "^7.0.2",
     "@typescript-eslint/parser": "^7.0.2",
+    "@vscode/codicons": "^0.0.36",
     "@vscode/test-cli": "^0.0.6",
     "@vscode/test-electron": "^2.3.9",
     "eslint": "^8.56.0",
@@ -164,8 +165,7 @@
     "ts-loader": "^9.5.1",
     "typescript": "^5.3.3",
     "webpack": "^5.90.3",
-    "webpack-cli": "^5.1.4",
-    "@vscode/codicons": "^0.0.36"
+    "webpack-cli": "^5.1.4"
   },
   "dependencies": {
     "@vscode/webview-ui-toolkit": "^1.4.0",
@@ -174,6 +174,7 @@
     "fluent-ffmpeg": "^2.1.2",
     "md5": "^2.3.0",
     "moment": "^2.30.1",
+    "simple-git": "^3.24.0",
     "usfm-grammar": "^2.3.1",
     "uuid": "^9.0.1"
   },

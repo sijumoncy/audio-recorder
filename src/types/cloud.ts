@@ -23,6 +23,17 @@ export interface IGetRepoResponse {
   results: IRepo[];
 }
 
+export interface IObjectUploadAPIResponse {
+  checksum: string;
+  content_type: string;
+  metadata: { [key: string]: String };
+  mtime: number;
+  path: string;
+  path_type: string;
+  physical_address: string;
+  size_bytes: number;
+}
+
 /**
  *  --------------------------   WEB TO PROVIDER --------------------------
  */
