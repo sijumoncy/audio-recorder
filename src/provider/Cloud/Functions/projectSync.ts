@@ -2,6 +2,7 @@ import axios, { AxiosError } from 'axios';
 import { IAudioBurrito } from '../../../types/audio';
 import { environment } from '../../../environment';
 import { IRepo, IToken } from '../../../types/cloud';
+import { getRepo } from './cloudUtils';
 
 /**
  *
@@ -15,43 +16,17 @@ export async function projectSync(metadata: IAudioBurrito, token: IToken) {
   const projectName = metadata.identification.name.en;
   const projectIdObj = metadata.identification.primary['scribe'];
   const projectId = Object.keys(projectIdObj)[0];
-  const projectFullName = `${projectName}_${projectId}`;
-  let newProject = false;
-  let existingRepoData: IRepo | null = null;
+  // TODO : The repo name only Allows  :  Min 3 characters. Only lowercase alphanumeric characters and '-' allowed.
+  const projectFullName = `${projectName}-${projectId}`;
   console.log('Project Name >>>> : ', projectFullName);
 
   // check the project already exist or new project
-  try {
-    const getRepoResponse = await axios.get(
-      `${environment.BASE_CLOUD_URL}/repositories/${projectFullName}`,
-      { headers: { Authorization: `Bearer ${token.token}` } },
-    );
-
-    // Existing Project
-    newProject = false;
-    existingRepoData = getRepoResponse.data as IRepo;
-  } catch (err: any) {
-    if (axios.isAxiosError(err)) {
-      if (err.response?.status === 404) {
-        // not found error
-        // New Project
-        newProject = true;
-      } else {
-        throw new Error(err.message);
-      }
-    } else {
-      // unknown error
-      console.log('erros project check ======> ', err);
-      throw new Error(err?.message);
-    }
-  }
-
-  console.log('NEW PROJECT CHECK ====> ', newProject, existingRepoData);
-
-  if (newProject) {
-    // NEw Project ?
-    // create new repo - main branch or any specific branch as default
+  const repoData = await getRepo(token.token, projectFullName);
+  if (repoData) {
+    // exiting Project
+    console.log('Existing Project ===> ', repoData.id);
   } else {
-    //upload data to project and commit as new version - for NEW and Existing Projects
+    // new project
+    console.log('New Project ******* ');
   }
 }
