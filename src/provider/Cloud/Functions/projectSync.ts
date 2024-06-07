@@ -2,7 +2,7 @@ import axios, { AxiosError } from 'axios';
 import { IAudioBurrito } from '../../../types/audio';
 import { environment } from '../../../environment';
 import { IRepo, IToken } from '../../../types/cloud';
-import { getRepo } from './cloudUtils';
+import { createRepo, getRepo } from './cloudUtils';
 
 /**
  *
@@ -21,12 +21,19 @@ export async function projectSync(metadata: IAudioBurrito, token: IToken) {
   console.log('Project Name >>>> : ', projectFullName);
 
   // check the project already exist or new project
-  const repoData = await getRepo(token.token, projectFullName);
-  if (repoData) {
-    // exiting Project
-    console.log('Existing Project ===> ', repoData.id);
-  } else {
+  let repoData = await getRepo(token.token, projectFullName);
+  if (!repoData) {
     // new project
     console.log('New Project ******* ');
+    repoData = await createRepo(
+      projectFullName,
+      token.token,
+      environment.S3_BUCKET_NAME,
+    );
+    console.log('New Project Created &&&&&&&  ', repoData);
+  }
+  // exiting Project or created
+  if (repoData) {
+    console.log('Existing Project ===> ', repoData.id);
   }
 }

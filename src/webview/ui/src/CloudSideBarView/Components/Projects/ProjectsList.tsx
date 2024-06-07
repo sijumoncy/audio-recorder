@@ -44,7 +44,7 @@ function ProjectsList() {
   console.log({ projects });
 
   return (
-    <div className="">
+    <div className="flex flex-col gap-2">
       {projects.map((project) => (
         <div className="flex gap-2">
           <div>
